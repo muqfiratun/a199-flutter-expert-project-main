@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:ditonton/common/constants.dart';
-//import 'package:ditonton/common/ssl_pinning.dart';
+import 'package:ditonton/common/ssl_pinning.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/injection.dart' as di;
 import 'package:ditonton/presentation/pages/about_page.dart';
@@ -30,7 +30,7 @@ import 'package:ditonton/presentation/series_tv_bloc/bloc/search_series_tv_bloc.
 import 'package:ditonton/presentation/series_tv_bloc/bloc/detail_series_tv_bloc.dart';
 import 'package:ditonton/presentation/series_tv_bloc/bloc/top_rated_series_tv_bloc.dart';
 import 'package:ditonton/presentation/series_tv_bloc/bloc/watchlist_series_tv_bloc.dart';
-//import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,8 +46,8 @@ class MyHttpOverrides extends HttpOverrides{
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // await HttpSSLPinning.init();
+  await Firebase.initializeApp();
+  await HttpSSLPinning.init();
   HttpOverrides.global = MyHttpOverrides();
   di.init();
   runApp(MyApp());
