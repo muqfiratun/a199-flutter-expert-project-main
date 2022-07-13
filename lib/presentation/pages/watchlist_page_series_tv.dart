@@ -1,25 +1,27 @@
-import 'package:ditonton/common/state_enum.dart';
+
 import 'package:ditonton/common/utils.dart';
-import 'package:ditonton/presentation/provider/watchlist_notifier_series_tv.dart';
+import 'package:ditonton/presentation/series_tv_bloc/bloc/watchlist_series_tv_bloc.dart';
 import 'package:ditonton/presentation/widgets/list_card_series_tv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-class WatchlistTvSeriesPage extends StatefulWidget {
-  static const ROUTE_NAME = '/watchlist_tvseries';
+class WatchlistPageSeriesTv extends StatefulWidget {
+  static const ROUTE_NAME = '/watchlist_SeriesTv';
 
   @override
-  State<WatchlistTvSeriesPage> createState() => _WatchlistTvSeriesPageState();
+  State<WatchlistPageSeriesTv> createState() => _WatchlistPageStateSeriesTv();
 }
 
-class _WatchlistTvSeriesPageState extends State<WatchlistTvSeriesPage> with RouteAware{
+class _WatchlistPageStateSeriesTv extends State<WatchlistPageSeriesTv> with RouteAware{
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<WatchlistSeriesTvNotifier>(context, listen: false)
-            .fetchWatchlistTvSeries());
+    Future.microtask(() {
+      context.read<WatchlistSeriesTvBloc>().add(OnWatchlistSeriesTv());
+    });
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -27,36 +29,50 @@ class _WatchlistTvSeriesPageState extends State<WatchlistTvSeriesPage> with Rout
   }
 
   void didPopNext() {
-    Provider.of<WatchlistSeriesTvNotifier>(context, listen: false)
-        .fetchWatchlistTvSeries();
+    context.read<WatchlistSeriesTvBloc>().add(OnWatchlistSeriesTv());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TV Series Watchlist'),
+        title: Text('Watchlist'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<WatchlistSeriesTvNotifier>(
-          builder: (context, data, child) {
-            if (data.watchlistState == RequestState.Loading) {
+        child: BlocBuilder<WatchlistSeriesTvBloc, WatchlistSeriesTvState>(
+          builder: (context, state) {
+            if (state is WatchlistSeriesTvLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.watchlistState == RequestState.Loaded) {
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  final series = data.watchlistTvSeries[index];
-                  return SeriesTvCard(series);
-                },
-                itemCount: data.watchlistTvSeries.length,
+            } else if (state is WatchlistSeriesTvHasData) {
+              final result = state.result;
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final movie = result[index];
+                        return SeriesTvCard(movie);
+                      },
+                      itemCount: result.length,
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is WatchlistSeriesTvEmpty) {
+              return Center(
+                child: Text("No watch list yet"),
+              );
+            } else if (state is WatchlistSeriesTvError) {
+              return Center(
+                child: Text(state.message),
               );
             } else {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text("Error get data watch list"),
               );
             }
           },

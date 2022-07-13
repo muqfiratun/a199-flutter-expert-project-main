@@ -5,7 +5,7 @@ class Season extends Equatable {
   int seasonNumber;
   int episodeCount;
   String name;
-  String posterPath;
+  String? posterPath;
 
   Season({
         required this.id,

@@ -2,11 +2,11 @@ import 'package:ditonton/domain/entities/season_tv.dart';
 import 'package:equatable/equatable.dart';
 
 class SeasonTvModel extends Equatable {
-  int id;
-  int seasonNumber;
-  int episodeCount;
-  String name;
-  String posterPath;
+  final int id;
+  final int seasonNumber;
+  final int episodeCount;
+  final String name;
+  final String? posterPath;
 
   SeasonTvModel(
       {

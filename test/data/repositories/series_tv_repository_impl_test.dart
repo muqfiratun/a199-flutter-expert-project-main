@@ -15,19 +15,19 @@ import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late SeriesTvRepositoryImpl repository;
-  late MockRemoteDataSourceSeriesTv mockRemoteDataSource;
-  late MockLocalDataSourceSeriesTv mockLocalDataSource;
+  late MockRemoteSeriesTvDataSource mockRemoteDataSource;
+  late MockSeriesTvLocalSource mockLocalDataSource;
 
   setUp(() {
-    mockRemoteDataSource = MockRemoteDataSourceSeriesTv();
-    mockLocalDataSource = MockLocalDataSourceSeriesTv();
+    mockRemoteDataSource = MockRemoteSeriesTvDataSource();
+    mockLocalDataSource = MockSeriesTvLocalSource();
     repository = SeriesTvRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
     );
   });
 
-  final tTvSeriesModel = SeriesTvModel(
+  final tSeriesTvModel = SeriesTvModel(
     backdropPath: 'backdropPath',
     firstAirDate: "2021-09-03",
     genreIds: [1, 2, 3],
@@ -59,8 +59,8 @@ void main() {
     voteCount: 2710,
   );
 
-  final tTvSeriesModelList = <SeriesTvModel>[tTvSeriesModel];
-  final tTvSeriesList = <SeriesTv>[tSeries];
+  final tSeriesTvModelList = <SeriesTvModel>[tSeriesTvModel];
+  final tSeriesTvList = <SeriesTv>[tSeries];
 
   group('Now Playing Tv Series', () {
     test(
@@ -68,14 +68,14 @@ void main() {
             () async {
           // arrange
           when(mockRemoteDataSource.getNowPlayingSeriesTv())
-              .thenAnswer((_) async => tTvSeriesModelList);
+              .thenAnswer((_) async => tSeriesTvModelList);
           // act
           final result = await repository.getNowPlayingSeriesTv();
           // assert
           verify(mockRemoteDataSource.getNowPlayingSeriesTv());
           /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
           final resultList = result.getOrElse(() => []);
-          expect(resultList, tTvSeriesList);
+          expect(resultList, tSeriesTvList);
         });
 
     test(
@@ -110,14 +110,14 @@ void main() {
     test('should return tv series list when call to data source is success',
             () async {
           // arrange
-          when(mockRemoteDataSource.getNowPlayingSeriesTv())
-              .thenAnswer((_) async => tTvSeriesModelList);
+          when(mockRemoteDataSource.getPopularSeriesTv())
+              .thenAnswer((_) async => tSeriesTvModelList);
           // act
           final result = await repository.getTvPopular();
           // assert
           /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
           final resultList = result.getOrElse(() => []);
-          expect(resultList, tTvSeriesList);
+          expect(resultList, tSeriesTvList);
         });
 
     test(
@@ -151,13 +151,13 @@ void main() {
             () async {
           // arrange
           when(mockRemoteDataSource.getTopRatedSeriesTv())
-              .thenAnswer((_) async => tTvSeriesModelList);
+              .thenAnswer((_) async => tSeriesTvModelList);
           // act
           final result = await repository.getTopRatedSeriesTv();
           // assert
           /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
           final resultList = result.getOrElse(() => []);
-          expect(resultList, tTvSeriesList);
+          expect(resultList, tSeriesTvList);
         });
 
     test('should return ServerFailure when call to data source is unsuccessful',
@@ -187,7 +187,7 @@ void main() {
 
   group('Get Tv Series Detail', () {
     final tId = 1;
-    final tTvSeriesResponse = DetailResponseSeriesTv(
+    final tSeriesTvResponse = DetailResponseSeriesTv(
       adult: false,
       backdropPath: "/4g5gK5eGWZg8swIZl6eX2AoJp8S.jpg",
       episodeRunTime: [42],
@@ -221,7 +221,7 @@ void main() {
             () async {
           // arrange
           when(mockRemoteDataSource.getDetailSeriesTv(tId))
-              .thenAnswer((_) async => tTvSeriesResponse);
+              .thenAnswer((_) async => tSeriesTvResponse);
           // act
           final result = await repository.getDetailSeriesTv(tId);
           // assert
@@ -258,21 +258,21 @@ void main() {
   });
 
   group('Get Tv Series Recommendations', () {
-    final tTvSeriesList = <SeriesTvModel>[];
+    final tSeriesTvList = <SeriesTvModel>[];
     final tId = 1;
 
     test('should return data (tv series list) when the call is successful',
             () async {
           // arrange
           when(mockRemoteDataSource.getRecommendationsSeriesTv(tId))
-              .thenAnswer((_) async => tTvSeriesList);
+              .thenAnswer((_) async => tSeriesTvList);
           // act
           final result = await repository.getRecommendationsSeriesTv(tId);
           // assert
           verify(mockRemoteDataSource.getRecommendationsSeriesTv(tId));
           /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
           final resultList = result.getOrElse(() => []);
-          expect(resultList, equals(tTvSeriesList));
+          expect(resultList, equals(tSeriesTvList));
         });
 
     test(
@@ -310,13 +310,13 @@ void main() {
             () async {
           // arrange
           when(mockRemoteDataSource.searchSeriesTv(tQuery))
-              .thenAnswer((_) async => tTvSeriesModelList);
+              .thenAnswer((_) async => tSeriesTvModelList);
           // act
           final result = await repository.searchSeriesTv(tQuery);
           // assert
           /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
           final resultList = result.getOrElse(() => []);
-          expect(resultList, tTvSeriesList);
+          expect(resultList, tSeriesTvList);
         });
 
     test('should return ServerFailure when call to data source is unsuccessful',

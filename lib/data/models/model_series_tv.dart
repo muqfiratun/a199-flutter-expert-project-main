@@ -2,21 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:ditonton/domain/entities/series_tv.dart';
 
 class SeriesTvModel extends Equatable {
-  int id;
-  int voteCount;
-  String name;
-  String overview;
-  String posterPath;
-  String backdropPath;
-  String firstAirDate;
-  String originalName;
-  String originalLanguage;
-  double popularity;
-  double voteAverage;
-  List<int> genreIds;
-  List<String> originCountry;
-
-  SeriesTvModel({
+    SeriesTvModel({
     required this.id,
     required this.voteCount,
     required this.name,
@@ -31,6 +17,20 @@ class SeriesTvModel extends Equatable {
     required this.originCountry,
     required this.popularity,
   });
+
+  final int id;
+  final int voteCount;
+  final String name;
+  final String overview;
+  final String? posterPath;
+  final String? backdropPath;
+  final String? firstAirDate;
+  final String? originalName;
+  final String? originalLanguage;
+  final double popularity;
+  final double voteAverage;
+  final List<int> genreIds;
+  final List<String> originCountry;
 
   factory SeriesTvModel.fromJson(Map<String, dynamic> json) => SeriesTvModel(
       id: json["id"],

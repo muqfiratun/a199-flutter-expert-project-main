@@ -8,10 +8,10 @@ import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late SearchSeriesTv usecase;
-  late MockRepositorySeriesTv mockRepositorySeriesTv;
+  late MockSeriesTvRepository mockRepositorySeriesTv;
 
   setUp(() {
-    mockRepositorySeriesTv = MockRepositorySeriesTv();
+    mockRepositorySeriesTv = MockSeriesTvRepository();
     usecase = SearchSeriesTv(mockRepositorySeriesTv);
   });
 
